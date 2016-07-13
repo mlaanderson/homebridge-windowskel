@@ -1,0 +1,27 @@
+{
+  "name": "homebridge-windowskel",
+  "version": "0.0.1",
+  "description": "Skeleton Homebridge Window Plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlaanderson/homebridge-windowskel.git"
+  },
+  "engines": {
+    "homebridge": ">=0.2.0"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "window",
+    "skeleton"
+  ],
+  "author": "Michael Anderson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mlaanderson/homebridge-windowskel/issues"
+  },
+  "homepage": "https://github.com/mlaanderson/homebridge-windowskel#readme"
+}
