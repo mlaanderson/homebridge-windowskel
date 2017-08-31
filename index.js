@@ -1,5 +1,8 @@
+const debug = require('debug')('homebridge-windowskel');
+
 var Service, Characteristic;
 module.exports = function(homebridge) {
+    debug('Called by homebridge');
     Service = homebridge.hap.Service;
     Characteristic = homebridge.hap.Characteristic;
     homebridge.registerAccessory("homebridge-windowskel", "WindowSkel", WindowSkeleton);
@@ -7,6 +10,7 @@ module.exports = function(homebridge) {
 
 class WindowSkeleton {
     constructor(log, config) {
+        debug('Begin constructor');
         this.log = log;
         this.name = config.name;
         
@@ -78,6 +82,7 @@ class WindowSkeleton {
             .setCharacteristic(Characteristic.HardwareRevision, '0.0.2')
             // Characteristic.SoftwareRevision String Read
             .setCharacteristic(Characteristic.SoftwareRevision, require('./package').version);
+        debug('End constructor');
     }
     
     /**
@@ -87,6 +92,7 @@ class WindowSkeleton {
      * illustrate how a window operator will send events to Homebridge
      */
     _fakeWindowOperation() {
+        debug('In fakeWindowOperation');
         if (this._targetPosition > this._currentPosition) {
             this._positionState = Characteristic.PositionState.INCREASING;
             this._notifyPositionState();
@@ -99,6 +105,7 @@ class WindowSkeleton {
             clearTimeout(this._fakeTimeout);
         }
         
+        debug('Starting fake window operation to fake a %s', this._positionState === Characteristic.PositionState.INCREASING ? 'OPEN' : 'CLOSE');
         this._fakeTimeout = setTimeout((function() {
             this._fakeTimeout = 0;
             this._currentPosition = this._targetPosition;
@@ -119,6 +126,7 @@ class WindowSkeleton {
      * otherwise use this to notify 100% for fully open or 0% for full closed.
      */
     _notifyCurrentPosition() {
+        debug('_notifyCurrentPosition: %o', this._currentPosition);
         this.log("_notifyCurrentPosition");
         this.characteristics.CurrentPosition.setValue(this._currentPosition);
     }
@@ -129,6 +137,7 @@ class WindowSkeleton {
      * the result will be an endless loop.
      */
     _notifyTargetPosition() {
+        debug('_notifyTargetPosition: %o', this._targetPosition);
         this.log("_notifyTargetPosition");
         this.characteristics.TargetPosition.setValue(this._targetPosition);
     }
@@ -138,7 +147,8 @@ class WindowSkeleton {
      * is used to indicate if the window is STOPPED, INCREASING (opening)
      * or DECREASING (closing). This should be called once per state change.
      */
-    _notifyPositionState() {
+    _notifyTargetPosition() {
+        debug('_notifyTargetPosition: %o', this._positionState);
         this.log("_notifyPositionState");
         this.characteristics.PositionState.setValue(this._positionState);
     }
@@ -150,6 +160,7 @@ class WindowSkeleton {
      * assumed if the motor is stopped prior to being fully opened or closed.
      */
     _notifyObstructionDetected() {
+        debug('_notifyObstructionDetected: %o', this._obstructionDetected);
         this.log("_notifyObstructionDetected");
         this.characteristics.ObstructionDetected.setValue(this._obstructionDetected);
     }
@@ -158,6 +169,7 @@ class WindowSkeleton {
      * _notifyName should be called if the window name changes.
      */
     _notifyName() {
+        debug('_notifyName: %o', this.name);
         this.log("_notifyName");
         this.characteristics.Name.setValue(this.name);
     }
@@ -172,6 +184,7 @@ class WindowSkeleton {
      * devices of the same type are installed/connected.
      */
     identify(callback) {
+        debug('Identify called');
         this.log("identify");
         callback();
     }
@@ -183,6 +196,7 @@ class WindowSkeleton {
      * take time.
      */
     getCurrentPosition(callback) {
+        debug('getCurrentPosition called: %o', this._currentPosition);
         this.log("getCurrentPosition", this._currentPosition);
         callback(null, this._currentPosition);
     }
@@ -193,6 +207,7 @@ class WindowSkeleton {
      * It doesn't appear to be called any other time.
      */
     getTargetPosition(callback) {
+        debug('getTargetPosition called: %o', this._targetPosition);
         this.log("getTargetPosition", this._targetPosition);
         
         callback(null, this._targetPosition);
@@ -207,6 +222,7 @@ class WindowSkeleton {
      * close.
      */
     setTargetPosition(value, callback) {
+        debug('setTargetPosition called: %o to %o', this._targetPosition, value);
         this._targetPosition = value;
         this.log("setTargetPosition", this._targetPosition);
         
@@ -220,6 +236,7 @@ class WindowSkeleton {
      * current position state (DECREASING, INCREASING or STOPPED).
      */
     getPositionState(callback) {
+        debug('getPositionState called: %o', this._positionState);
         this.log("getPositionState", this._positionState);
         callback(null, this._positionState);
     }
@@ -230,8 +247,9 @@ class WindowSkeleton {
      * is optional.
      */
     setHoldPosition(value, callback) {
-        this.log("setHoldPosition", this._holdPosition);
+        debug('setHoldPosition called: %o to %o', this._holdPosition, value);
         this._holdPosition = value;
+        this.log("setHoldPosition", this._holdPosition);
         callback(null, this._holdPosition);
     }
     
@@ -241,6 +259,7 @@ class WindowSkeleton {
      * optional.
      */
     getObstructionDetected(callback) {
+        debug('getObstructionDetected called: %o', this._obstructionDetected);
         this.log("getObstructionDetected", this._obstructionDetected);
         callback(null, this._obstructionDetected);
     }
@@ -250,6 +269,7 @@ class WindowSkeleton {
      * device. This characteristic is optional.
      */
     getName(callback) {
+        debug('getName called: %o', this.name);
         this.log("getName", this.name);
         callback(null, this.name);
     }
@@ -261,6 +281,7 @@ class WindowSkeleton {
      * services.
      */
     getServices() {
+        debug('getServices called');
         return [this.service, this.informationService];
     }
 }

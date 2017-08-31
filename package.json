@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/mlaanderson/homebridge-windowskel/issues"
   },
-  "homepage": "https://github.com/mlaanderson/homebridge-windowskel#readme"
+  "homepage": "https://github.com/mlaanderson/homebridge-windowskel#readme",
+  "dependencies": {
+    "debug": "^3.0.1"
+  }
 }
